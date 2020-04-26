@@ -45,6 +45,11 @@
   margin-bottom: 8px;
 }
 
+.new-project .content form textarea{
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
 .logoIMG {
   max-width:355px;
   max-height:300px;

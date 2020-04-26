@@ -71,6 +71,18 @@
   opacity: 0.8;
 
 }
+.profile-container .edit{
+  position: absolute;
+  right: 60px;
+  top: 24px;
+  border: 0;
+  background-color: rgb(32, 32, 36);
+}
+
+.profile-container .edit:hover{
+  opacity: 0.8;
+
+}
 
 .profile-container ul li strong{
   display: block;
@@ -87,16 +99,21 @@
   line-height: 21px;
   font-size: 16px;
 }
+.profile-container ul li a{
+  color: #bebed8;
+  line-height: 21px;
+  font-size: 16px;
+}
+
 
 .profile-container .goal{
   display: flex;
   justify-content: space-between;
 }
 
-.profile-container .goal button{
-  margin-top: 17px;
+.profile-container .buttonGoal{
   height: 30px;
-  width: 70px;
+  width: 90px;
   background-color: #141414;
   border-radius: 10px;
   border-color: #04D361;
@@ -104,81 +121,13 @@
   font-weight: 500;
   text-decoration: none;
   transition: filter 0.2s;
+  margin-bottom: 17px;
 }
-.profile-container .goal button:hover{
+.profile-container .buttonGoal:hover{
   filter : brightness(90%);
 }
 
-.profile-container .goal .goalInput{
-  width: 70%;
-  height: 30px;
-  font-size: 15px;
-  border: 1px solid #dcdce6;
-  border-radius: 8px;
-  padding: 0 24px;
-  right: 60px;
-  margin-bottom: 24px;
-  border-radius: 10px;
-  background-color: #141414;
-  border-color: #04D361;
-  color: #04D361;
-}
 
-.profile-container .goal .goalInput::placeholder{
-  color: #04D361;
-}
-
-.profile-container .goalCheck{
-  margin-left: 24px;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  
-}
-.profile-container .goalCheck p{
-  width: 40%;
-}
-.profile-container .goalCheck input{
-  right: 24px;
-
-  background-color: #e02041;
-
-}
-
-.profile-container .goalCheck .incompleto{
-  color: #e02041;
-}
-
-.profile-container .goalCheck .concluído{
-  color: green;
-}
-
-.profile-container .goalCheck .incompletobutton{
-  height: 30px;
-  width: 100px;
-  background: #e02041;
-  border: 0;
-  border-radius: 8px;
-  color: #FFF;
-  font-weight: 500;
-  text-decoration: none;
-  transition: filter 0.2s;
-}
-.profile-container .goalCheck .incompletobutton:hover{
-  filter : brightness(90%);
-}
-
-.profile-container .goalCheck .concluídobutton{
-  height: 30px;
-  width: 100px;
-  background:  #04D361;
-  border: 0;
-  border-radius: 8px;
-  color: #FFF;
-  font-weight: 500;
-  text-decoration: none;
-  transition: filter 0.2s;
-}
-.profile-container .goalCheck .concluídobutton:hover{
-  filter : brightness(90%);
+.my-modal .modal-content {
+  background: rgb(32, 32, 36)
 }

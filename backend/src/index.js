@@ -7,7 +7,7 @@ const io = require('./socket')();
 const app = express();
 var http = require('http').createServer(app);
 
-//app.use(morgan('combined'));
+app.use(morgan('combined'));
 app.use(cors({
   /* origin: 'https://meusite.com.br' */
 }));

@@ -1,26 +1,30 @@
 import React, { useState, useEffect} from 'react';
 import logo from '../../assets/logo.png';
 import {Link, useHistory} from 'react-router-dom';
-import { FiPower, FiTrash2 } from 'react-icons/fi';
-import { Progress } from 'semantic-ui-react';
-import ProgressBar from 'react-bootstrap/ProgressBar'
-import socket from '../../services/socket';
-
-
+import { FiPower, FiTrash2, FiEdit } from 'react-icons/fi';
 import './style.css';
 import api from '../../services/api';
-// import { Container } from './styles';
+import {Modal, Button} from 'react-bootstrap';
+
+
+
 
 export default function Profile() {
   const [projects, setProjects] = useState([]);
-  const [state, setState] = useState('');
-  const [goals, setGoals] = useState([]);
-  const [goal, setGoal] = useState([]);
-  var [novoArray, setnovoArray] = useState([]);
-  const [classGoal, setclassGoal] = useState('');
+  const [smShow, setSmShow] = useState(false);
+  const [editShow, setEditShow] = useState(false);
+  const [title, setTittle] = useState('');
+  const [projetoSelecionado, setProjetoSelecionado] = useState('')
+  const [description, setDescription] = useState('');
   const userID = localStorage.getItem('userID');
   const userName = localStorage.getItem('userName');
   const history = useHistory();
+
+  //Edit project consts
+  const[name, setName] = useState('');
+  const[descriptionProject, setDescriptionProject] = useState('');
+  const[what_learned, setWhatlearned] = useState('');
+  const[git_url, setGitUrl] = useState('');
 
   useEffect(() => {
     
@@ -33,15 +37,18 @@ export default function Profile() {
     })
   }, [userID]);
 
-  useEffect(() => {
-    api.get('goals').then(response => {
-      setGoals(response.data);
+  useEffect(() =>{
+    projects.find(x => {
+      if(x.id === projetoSelecionado){
+        setName(x.name)
+        setDescriptionProject(x.description)
+        setWhatlearned(x.what_learned)
+        setGitUrl(x.git_url)
+      }
     })
-  }, [userID]);
+  }, [projetoSelecionado])
 
-
-
-
+  
   async function handleDeleteProject(id){
     try{
       await api.delete(`/projects/${id}`, {
@@ -55,88 +62,74 @@ export default function Profile() {
 
     setProjects(projects.filter(project => project.id !== id));
   }
+  
+  async function handleUpdateProject(e){
+    e.preventDefault()
+    console.log(`%c PROJECTID = ${projetoSelecionado}` , 'background: #222; color: #bada55');
+    const data = {
+      name,
+      description : descriptionProject,
+      what_learned,
+      git_url
+    };
+    try{
+      await api.put(`projects/${projetoSelecionado}`, data, {
+        headers: {
+          Authorization : userID
+        }
+      })
+    }catch(err){
+    alert('Erro ao cadastrar projeto');
+    }
+    api.get('profile', {
+      headers: {
+        Authorization : userID,
+      }
+    }).then(response => {
+      setProjects(response.data);
+    })
+     
+    setEditShow(false)
+
+}
 
   async function handleLogout(){
     localStorage.clear();
     history.push('/');
   }
 
-
-  
-
-    async function handleNewGoal(projectID, e){
-      e.preventDefault();
-      const data = {
-        title : goal,
-
-      };
-      try{
-        await api.post('goals', data, {
-          headers: {
-            Authorization : projectID,
-            Authorization2 : userID
-          }
-        })
-      }catch(err){
-        alert('Erro ao cadastrar projeto');
-      }
-
-      
-      api.get('goals').then(response => {
-        setGoals(response.data);
-      })
-
-      api.get('profile', {
+  async function handleNewTech(e){
+    e.preventDefault();
+    console.log(`%c PROJECTID = ${projetoSelecionado}` , 'background: #222; color: #bada55');
+    const data = {
+      title,
+      description
+    };
+    try{
+      await api.post('tech', data, {
         headers: {
-          Authorization : userID,
+          Authorization : projetoSelecionado,
+          Authorization2 : userID
         }
-      }).then(response => {
-        setProjects(response.data);
       })
-      
+    }catch(err){
+      alert('Erro ao cadastrar projeto');
     }
 
-    function Objetivos(props) {
-      novoArray = goals.filter(goals => goals.project_id === ""+props.id);
-      return(
-        novoArray.map(goal => ( 
-          <div className="goalCheck">
-            <p >{goal.title}</p>
-            
-        <button type="button" className={goal.status +"button "+classGoal} onClick={() => hangleStatusGoal(goal.id, goal.status)}>{goal.status}</button>
-          </div>
-         ))
-      )
 
-       async function hangleStatusGoal(id, status){
-         console.log(userID);
-        try{
-          await api.put(`/goals/${id}`, {
-            headers: {
-              Authorization : 12345
-            }
-          })
-          
-          api.get('goals').then(response => {
-            setGoals(response.data);
-          })
-
-          api.get('profile', {
-            headers: {
-              Authorization : userID,
-            }
-          }).then(response => {
-            setProjects(response.data);
-          })
-          
-
-        }catch(err){
-          alert('Erro ao mudar status do objetivo, tente novamente mais tarde');
-        }
-        //history.go("/projects");
-       }  
-        
-    }
+    api.get('profile', {
+      headers: {
+        Authorization : userID,
+      }
+    }).then(response => {
+      setProjects(response.data);
+    })
+     
+    setSmShow(false)
+    setTittle('')
+    setDescription('')
+  }
+       
 
   return (
     
@@ -162,28 +155,113 @@ export default function Profile() {
           <strong>Descrição: </strong>
           <p>{project.description}</p>
 
-          <strong>Objetivos: </strong>
+          <strong>O que aprendi: </strong>
+          <p>{project.what_learned}</p>
 
-          <Objetivos id={project.id} />
+          <strong>Tecnologias utilizadas: </strong>
 
-          <form className="goal" onSubmit={ (e) => handleNewGoal(project.id, e)}>
-            <input className="goalInput" type="text"  key={project.id}
-            onChange={e => {
-              setGoal(e.target.value)
+          {project.technologies.map(project =>(
 
+            <p style={{marginBottom : 15}}>{project.title}</p>
+
+          ))}
+          
+          <button className="buttonGoal" onClick={() => {
+            setSmShow(true)
+            setProjetoSelecionado(project.id)
+            }}>adicionar</button>
+          <Modal
+            className="my-modal"
+            size="md"
+            show={smShow}
+            onEnter={() => {
+              setTittle('')
+              setDescription('')
             }}
-            ></input>
-            <button className="buttonGoal" type="submit">criar</button>
-          </form>
+            onHide={() => setSmShow(false)}
+            aria-labelledby="example-modal-sizes-title-sm"
+          >
+            <Modal.Header closeButton>
 
+              <Modal.Title id="example-modal-sizes-title-sm">
+                Adicionar tecnologia ao projeto
+              </Modal.Title>
 
+            </Modal.Header>
 
-          <strong>Progresso:</strong>
-          <p>{project.progress}%</p>
-          <ProgressBar now={60} />
+            <Modal.Body>
+            <form onSubmit={handleNewTech}>
+              <input type="text" placeholder = "Nome da tecnologia*"
+              value={title}
+              onChange={e => setTittle(e.target.value)}
+              style = {{marginBottom : "16px"}} />
+
+              <textarea placeholder = "Descrição*"
+              value={description}
+              onChange={e => setDescription(e.target.value)}  />
+
+              <button className = "button" type = "submit">Adicionar</button>
+            </form>
+            </Modal.Body>
+          </Modal>
+          
+          <Modal
+            className="my-modal"
+            size="md"
+            show={editShow}
+            onEnter={() => {
+              setTittle('')
+              setDescription('')
+            }}
+            scrollable = "true"
+            onHide={() => setEditShow(false)}
+            aria-labelledby="example-modal-sizes-title-sm"
+          >
+            <Modal.Header closeButton>
+
+              <Modal.Title id="example-modal-sizes-title-sm">
+                Editar projeto
+              </Modal.Title>
+
+            </Modal.Header>
+
+            <Modal.Body>
+            <form onSubmit={handleUpdateProject}>
+            <input type="text" placeholder = "Título do projeto*"
+              value={name}
+              onChange={e => setName(e.target.value)} />
+
+              <textarea placeholder = "Descrição*"
+              value={descriptionProject}
+              onChange={e => setDescriptionProject(e.target.value)}
+              style = {{marginTop : "16px"}}  />
+
+              <textarea placeholder = "O que aprendeu*"
+              value={what_learned}
+              onChange={e => setWhatlearned(e.target.value)} 
+              style = {{marginTop : "16px"}}  />  
+
+              <input type="text" placeholder = "Url do git"
+              value={git_url}
+              onChange={e => setGitUrl(e.target.value)} />  
+              <button className = "button" type = "submit">Atualizar</button>
+            </form>
+            </Modal.Body>
+          </Modal>
+
+          <strong>Url do git:</strong>
+          <a href={project.git_url}>{project.git_url}</a>
 
           <button className="trash" onClick={ () => handleDeleteProject(project.id)} type="button">
             <FiTrash2 size={20} color= "#04D361"/>
+          </button>
+
+          <button className="edit" onClick={ () => {
+            setEditShow(true)
+            setProjetoSelecionado(project.id);
+            
+          }} type="button">
+            <FiEdit size={20} color= "#04D361"/>
           </button>
 
         </li> 

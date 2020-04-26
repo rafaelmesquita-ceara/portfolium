@@ -11,13 +11,17 @@ export default function NewProject() {
   const history = useHistory();
   const[name, setName] = useState('');
   const[description, setDescription] = useState('');
+  const[what_learned, setWhatlearned] = useState('');
+  const[git_url, setGitUrl] = useState('');
   const userID = localStorage.getItem('userID');
   async function handleNewProject(e){
     e.preventDefault();
     
     const data = {
       name,
-      description
+      description,
+      what_learned,
+      git_url
     };
 
     try{
@@ -38,7 +42,7 @@ export default function NewProject() {
         <section>
           <img src={logo} className="logoIMG" alt = "Be the Hero"/>
           <h1>Cadastrar novo projeto</h1>
-          <p>Descreva as informações do seu projeto</p>
+          <p>Descreva as informações do seu projeto. Campos com * são obrigatórios</p>
 
           <Link className="back-link" to="/profile">
             <FiArrowLeft size= {16} color = "#E02041" />
@@ -47,14 +51,21 @@ export default function NewProject() {
         </section>
 
         <form onSubmit={handleNewProject}>
-          <input type="text" placeholder = "Título do projeto"
+          <input type="text" placeholder = "Título do projeto*"
           value={name}
           onChange={e => setName(e.target.value)} />
 
-          <textarea placeholder = "Descrição"
+          <textarea placeholder = "Descrição*"
           value={description}
           onChange={e => setDescription(e.target.value)}  />
 
+          <textarea placeholder = "O que aprendeu*"
+          value={what_learned}
+          onChange={e => setWhatlearned(e.target.value)}  />  
+
+          <input type="text" placeholder = "Url do git"
+          value={git_url}
+          onChange={e => setGitUrl(e.target.value)} />  
 
           <button className = "button" type = "submit">Cadastrar</button>
         </form>
