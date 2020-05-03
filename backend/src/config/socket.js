@@ -1,5 +1,5 @@
 io = require('socket.io')();
-const connectionDB = require('./database/connection');
+const connectionDB = require('../database/connection');
 
 io.listen(3335);
 

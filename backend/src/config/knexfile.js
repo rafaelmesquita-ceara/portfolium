@@ -3,12 +3,15 @@
 module.exports = {
 
   development: {
-    client: 'sqlite3',
+    client: 'mysql',
     connection: {
-      filename: './src/database/db.sqlite'
+      host : 'localhost',
+      user : 'root',
+      password : '116213rb',
+      database : 'portifolium'
     },
     migrations: {
-      directory: './src/database/migrations'
+      directory: '../database/migrations'
     },
     useNullAsDefault: true,
   },
