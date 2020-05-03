@@ -27,14 +27,7 @@ export default function Profile() {
   const[git_url, setGitUrl] = useState('');
 
   useEffect(() => {
-    
-    api.get('profile', {
-      headers: {
-        Authorization : userID,
-      }
-    }).then(response => {
-      setProjects(response.data);
-    })
+    atualizaProjeto();
   }, [userID]);
 
   useEffect(() =>{
@@ -63,6 +56,18 @@ export default function Profile() {
     setProjects(projects.filter(project => project.id !== id));
   }
   
+  async function atualizaProjeto(){
+    api.get('profile', {
+      headers: {
+        Authorization : userID,
+      }
+    }).then(response => {
+      setProjects(response.data);
+    })
+     
+    setEditShow(false)
+  }
+
   async function handleUpdateProject(e){
     e.preventDefault()
     console.log(`%c PROJECTID = ${projetoSelecionado}` , 'background: #222; color: #bada55');
@@ -81,15 +86,9 @@ export default function Profile() {
     }catch(err){
     alert('Erro ao cadastrar projeto');
     }
-    api.get('profile', {
-      headers: {
-        Authorization : userID,
-      }
-    }).then(response => {
-      setProjects(response.data);
-    })
+    atualizaProjeto();
      
-    setEditShow(false)
+    setEditShow(false);
 
 }
 
@@ -117,19 +116,28 @@ export default function Profile() {
     }
 
 
-    api.get('profile', {
-      headers: {
-        Authorization : userID,
-      }
-    }).then(response => {
-      setProjects(response.data);
-    })
+    atualizaProjeto();
      
     setSmShow(false)
     setTittle('')
     setDescription('')
   }
        
+  async function handleDeleteTech(id){
+    console.log(`%c ID = ${id}` , 'background: #222; color: #bada55');
+    console.log(`%c USERID = ${userID}` , 'background: #222; color: green');
+    try{
+      await api.delete(`/tech/${id}`, {
+        headers: {
+          Authorization : userID
+        }
+      })
+    }catch(err){
+      alert('Erro ao deletar tecnologia, tente novamente mais tarde');
+    }
+    atualizaProjeto();
+  }
+  
 
   return (
     
@@ -161,9 +169,12 @@ export default function Profile() {
           <strong>Tecnologias utilizadas: </strong>
 
           {project.technologies.map(project =>(
-
-            <p style={{marginBottom : 15}}>{project.title}</p>
-
+            <div className="deleteTech">
+              <p style={{marginBottom : 15}}>{project.title}</p>
+              <button onClick={ () => handleDeleteTech(project.id)} type="button">
+              <FiTrash2 size={20} color= "#04D361"/>
+              </button>
+            </div>
           ))}
           
           <button className="buttonGoal" onClick={() => {

@@ -14,6 +14,7 @@ app.use(cors({
 app.use(express.json());
 app.use(routes);
 
+console.log((27+ (4 * 30) + (2020 * 365)) - (6+ (3 * 30) + (2001 * 365)) )
 
 const server = http.listen(3333, () => {
   console.log('Porta 3333')
