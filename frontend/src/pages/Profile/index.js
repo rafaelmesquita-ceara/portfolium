@@ -4,7 +4,7 @@ import {Link, useHistory} from 'react-router-dom';
 import { FiPower, FiTrash2, FiEdit } from 'react-icons/fi';
 import './style.css';
 import api from '../../services/api';
-import {Modal, Button} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 
 
 
@@ -138,6 +138,22 @@ export default function Profile() {
     atualizaProjeto();
   }
   
+function Midia(props) {
+    if(props.mimetype[0] === "i"){
+      return (
+        <a href = {`${process.env.REACT_APP_STATIC_URL}/${props.filename}`}>
+        <img src={`${process.env.REACT_APP_STATIC_URL}/${props.filename}`} title={`${props.description}`} />
+        </a>
+      )
+    }else{
+      return (
+        <a href = {`${process.env.REACT_APP_STATIC_URL}/${props.filename}`}>
+        <video src={`${process.env.REACT_APP_STATIC_URL}/${props.filename}`} title={`${props.description}`} />
+        </a>
+      )
+    }
+    
+}
 
   return (
     
@@ -155,7 +171,6 @@ export default function Profile() {
       
       <ul>
         {projects.map(project => (
-
           <li key={project.id}>
           <strong>Projeto: </strong>
           <p>{project.name}</p>
@@ -276,6 +291,20 @@ export default function Profile() {
           </button>
 
         <strong>Mídia do projeto</strong>
+          
+        
+            <div className="imagensProjeto">
+              <ul>
+              {project.midia.map(midia =>(
+
+                <li key={midia.id}>
+                  <Midia mimetype={midia.mimetype} filename={midia.filename} description={midia.description}></Midia>
+                </li>
+
+               ))}
+               </ul>
+            </div>
+
         </li> 
         ))}     
       </ul>

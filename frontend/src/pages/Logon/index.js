@@ -6,13 +6,10 @@ import './style.css';
 import heroesImg from '../../assets/bordon.png';
 import logo from '../../assets/logo.png'
 
-// import { Container } from './styles';
-
 export default function Logon() {
   const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword]= useState('');
-  console.log(`ENV TEST: ${process.env.API_URL}`)
 
   async function handleLogin(e){
     e.preventDefault();

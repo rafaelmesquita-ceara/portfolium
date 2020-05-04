@@ -9,7 +9,7 @@ module.exports = {
       cb(null, path.resolve(__dirname, '..', '..', 'img', 'uploads'));
     },
     filename: (req, file, cb) => { 
-      crypto.randomBytes(process.env.BYTES_CRYPTO, (err, hash) => {
+      crypto.randomBytes(parseInt(process.env.BYTES_CRYPTO), (err, hash) => {
         if (err) cb(err);
 
         const filename = `${hash.toString('hex')}-${file.originalname}`;
@@ -19,15 +19,15 @@ module.exports = {
      }
   }),
   limits: {
-    fileSize : process.env.MAX_SIZE
+    fileSize : parseInt(process.env.MAX_SIZE)
   },
   fileFilter: (req, file, cb) =>{
     const allowedMimes = [
-      process.env.MIMETYPES[0],
-      process.env.MIMETYPES[1],
-      process.env.MIMETYPES[2],
-      process.env.MIMETYPES[3],
-      process.env.MIMETYPES[4]
+      'image/jpeg', 
+      'image/pjpeg', 
+      'image/png', 
+      'image/gif', 
+      'video/mp4'
     ];
 
     if(allowedMimes.includes(file.mimetype)) { 

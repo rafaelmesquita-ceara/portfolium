@@ -38,6 +38,10 @@ module.exports = {
       projects[i].technologies = await connection('technologies')
         .where('project_id', projects[i].id)
         .select('*');
+      
+      projects[i].midia = await connection('uploads')
+        .where('project_id', projects[i].id)
+        .select('*')
     }
     
 

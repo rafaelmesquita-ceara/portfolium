@@ -16,7 +16,7 @@ app.use('/uploads', express.static(path.resolve(__dirname, '..', 'img', 'uploads
 app.use(express.json());
 app.use(routes);
 
-
+console.log(process.env.MIMETYPES)
 const server = http.listen(process.env.APP_PORT, () => {
   console.log(`Porta ${process.env.APP_PORT}`)
 });

@@ -152,3 +152,31 @@
   border: 0;
   background: none;
 }
+
+.profile-container .imagensProjeto img{
+  max-width: 200px;
+  max-height: 125px;
+
+}
+.profile-container .imagensProjeto video{
+  width: 200px;
+  height: 125px; 
+
+}
+
+.profile-container .imagensProjeto ul{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  list-style: none;
+}
+
+.profile-container .imagensProjeto ul li{
+  background: none;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 8px;
+  position: relative;
+
+}
+
