@@ -275,6 +275,7 @@ export default function Profile() {
             <FiEdit size={20} color= "#04D361"/>
           </button>
 
+        <strong>Mídia do projeto</strong>
         </li> 
         ))}     
       </ul>

@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
+require('dotenv');
 module.exports = {
   dest : path.resolve(__dirname, '..', '..', 'img', 'uploads'),
   storage : multer.diskStorage({
@@ -8,7 +9,7 @@ module.exports = {
       cb(null, path.resolve(__dirname, '..', '..', 'img', 'uploads'));
     },
     filename: (req, file, cb) => { 
-      crypto.randomBytes(16, (err, hash) => {
+      crypto.randomBytes(process.env.BYTES_CRYPTO, (err, hash) => {
         if (err) cb(err);
 
         const filename = `${hash.toString('hex')}-${file.originalname}`;
@@ -18,15 +19,15 @@ module.exports = {
      }
   }),
   limits: {
-    fileSize : 50 * 1024 * 1024
+    fileSize : process.env.MAX_SIZE
   },
   fileFilter: (req, file, cb) =>{
     const allowedMimes = [
-      'image/jpeg',
-      'image/pjpeg',
-      'image/png',
-      'image/gif',
-      'video/mp4'
+      process.env.MIMETYPES[0],
+      process.env.MIMETYPES[1],
+      process.env.MIMETYPES[2],
+      process.env.MIMETYPES[3],
+      process.env.MIMETYPES[4]
     ];
 
     if(allowedMimes.includes(file.mimetype)) { 

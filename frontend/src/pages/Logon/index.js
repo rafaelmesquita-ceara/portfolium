@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { Link , useHistory} from 'react-router-dom';
 import { FiLogIn } from 'react-icons/fi';
-
 import api from '../../services/api';
 import './style.css';
 import heroesImg from '../../assets/bordon.png';
@@ -13,6 +12,7 @@ export default function Logon() {
   const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword]= useState('');
+  console.log(`ENV TEST: ${process.env.API_URL}`)
 
   async function handleLogin(e){
     e.preventDefault();

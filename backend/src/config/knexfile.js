@@ -1,17 +1,18 @@
 // Update with your config settings.
+require('dotenv/config');
 
 module.exports = {
 
   development: {
-    client: 'mysql',
+    client: process.env.DB_CLIENT,
     connection: {
-      host : 'localhost',
-      user : 'root',
-      password : '116213rb',
-      database : 'portifolium'
+      host : process.env.DB_HOST,
+      user : process.env.DB_USER,
+      password : process.env.DB_PASS,
+      database : process.env.DB_NAME
     },
     migrations: {
-      directory: '../database/migrations'
+      directory: process.env.DB_MIGRATIONS
     },
     useNullAsDefault: true,
   },

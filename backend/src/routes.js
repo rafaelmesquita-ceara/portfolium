@@ -12,10 +12,6 @@ const routes = express.Router();
 const TechController = require('./controllers/TechController');
 
 
-
-
-
-
 // Login
 routes.post('/sessions', SessionController.create);
 
