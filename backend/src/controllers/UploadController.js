@@ -1,6 +1,7 @@
 const multer = require('multer');
 const multerConfig = require('../config/multer')
 const connection = require('../database/connection');
+var fs = require('fs');
 
 module.exports = {
   async create(req, res){
@@ -41,14 +42,17 @@ module.exports = {
 
     const upload = await connection('uploads')
       .where('id', id)
-      .select('user_id')
+      .select('filename' ,'user_id')
       .first();
 
-      if (upload.user_id !== user_id) {
-        return res.status(401).json({ error: 'Operation not permitted.' });
-      }
-      
-      await connection('uploads').where('id', id).delete();
+    if (upload.user_id !== user_id) {
+      return res.status(401).json({ 'error': 'Operation not permitted.' });
+    }
+    console.log(upload.filename)
+    fs.unlink(`img/uploads/${upload.filename}`, function (err) {
+      if (err) throw err;
+    }); 
+    await connection('uploads').where('id', id).delete();
 
     return res.status(204).send({message : "Registro deletado com sucesso"});
   }

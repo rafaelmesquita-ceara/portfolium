@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import logo from '../../assets/logo.png';
 import {Link, useHistory} from 'react-router-dom';
-import { FiPower, FiTrash2, FiEdit } from 'react-icons/fi';
+import { FiPower, FiTrash2, FiEdit, FiPlus} from 'react-icons/fi';
 import './style.css';
 import api from '../../services/api';
 import {Modal} from 'react-bootstrap';
@@ -13,18 +13,25 @@ export default function Profile() {
   const [projects, setProjects] = useState([]);
   const [smShow, setSmShow] = useState(false);
   const [editShow, setEditShow] = useState(false);
+  const [uploadShow, setUploadShow] = useState(false);
   const [title, setTittle] = useState('');
   const [projetoSelecionado, setProjetoSelecionado] = useState('')
+  
   const [description, setDescription] = useState('');
   const userID = localStorage.getItem('userID');
   const userName = localStorage.getItem('userName');
   const history = useHistory();
-
+  
   //Edit project consts
   const[name, setName] = useState('');
   const[descriptionProject, setDescriptionProject] = useState('');
   const[what_learned, setWhatlearned] = useState('');
   const[git_url, setGitUrl] = useState('');
+
+  //Upload Files
+  const [projetoSelecionadoUpload, setProjetoSelecionadoUpload] = useState('')
+  const [file, setFile] = useState();
+  const [fileDescription, setFileDescription] = useState('');
 
   useEffect(() => {
     atualizaProjeto();
@@ -138,17 +145,52 @@ export default function Profile() {
     atualizaProjeto();
   }
   
+  async function handleAddMidia(e){
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("description", fileDescription);
+    try{
+      await api.post(`postImageVideo/`, formData, {
+        headers: {
+          Authorization : userID,
+          authorization2 : projetoSelecionadoUpload
+        }
+      })
+    }catch(err){
+    alert('Erro ao fazer upload');
+    }
+    atualizaProjeto();
+    setUploadShow(false);
+    setFileDescription('');
+
+  }
+
+  async function handleDeleteMidia(id){
+    console.log(`USERID ${userID}    PROJECTID ${id}`)
+    try{
+      await api.delete(`/postImageVideo/${id}`, {
+        headers: {
+          Authorization : userID
+        }
+      })
+    }catch(err){
+      alert('Erro ao deletar midia, tente novamente mais tarde');
+    }
+    atualizaProjeto();
+  }
+
 function Midia(props) {
     if(props.mimetype[0] === "i"){
       return (
         <a href = {`${process.env.REACT_APP_STATIC_URL}/${props.filename}`}>
-        <img src={`${process.env.REACT_APP_STATIC_URL}/${props.filename}`} title={`${props.description}`} />
+          <img src={`${process.env.REACT_APP_STATIC_URL}/${props.filename}`} title={`${props.description}`} />
         </a>
       )
     }else{
       return (
         <a href = {`${process.env.REACT_APP_STATIC_URL}/${props.filename}`}>
-        <video src={`${process.env.REACT_APP_STATIC_URL}/${props.filename}`} title={`${props.description}`} />
+          <video src={`${process.env.REACT_APP_STATIC_URL}/${props.filename}`} title={`${props.description}`} />
         </a>
       )
     }
@@ -196,6 +238,7 @@ function Midia(props) {
             setSmShow(true)
             setProjetoSelecionado(project.id)
             }}>adicionar</button>
+
           <Modal
             className="my-modal"
             size="md"
@@ -275,6 +318,39 @@ function Midia(props) {
             </Modal.Body>
           </Modal>
 
+          <Modal
+            className="my-modal"
+            size="md"
+            show={uploadShow}
+            scrollable = "true"
+            onEnter={() => {
+              setFileDescription('')
+              setFile('');
+            }}
+            onHide={() => setUploadShow(false)}
+            aria-labelledby="example-modal-sizes-title-sm"
+          >
+            <Modal.Header closeButton>
+
+              <Modal.Title id="example-modal-sizes-title-sm">
+                Adicionar mídia
+              </Modal.Title>
+
+            </Modal.Header>
+
+            <Modal.Body>
+            <form onSubmit={handleAddMidia}>
+            <input type="file" placeholder = "Título do projeto*" onChange={e => setFile(e.target.files[0])} />
+
+              <textarea placeholder = "Descrição*"
+              value={fileDescription}
+              onChange={e => setFileDescription(e.target.value)}
+              style = {{marginTop : "16px"}}  />
+              <button className = "button" type = "submit">Fazer upload</button>
+            </form>
+            </Modal.Body>
+          </Modal>
+
           <strong>Url do git:</strong>
           <a href={project.git_url}>{project.git_url}</a>
 
@@ -298,10 +374,23 @@ function Midia(props) {
               {project.midia.map(midia =>(
 
                 <li key={midia.id}>
+                  <button className="botaoMidia" onClick={ () => handleDeleteMidia(midia.id)} type="button">
+                      <FiTrash2 size={20} color= "#04D361"/>
+                  </button>
                   <Midia mimetype={midia.mimetype} filename={midia.filename} description={midia.description}></Midia>
+                  
                 </li>
-
                ))}
+
+               <li className="add">
+                <button onClick={() => {
+                setProjetoSelecionadoUpload(project.id)
+                setUploadShow(true)
+                }} type="button">
+                 <FiPlus size={100} color= "#04D361"/>
+                </button>
+                
+               </li>
                </ul>
             </div>
 
