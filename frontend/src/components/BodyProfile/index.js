@@ -10,7 +10,7 @@ class BodyProfile extends React.Component {
     super(props);
     this.state = {
       projectID : localStorage.getItem('projectID'),
-      project : {technologies : [], midia : []},
+      project : {technologies : [], midia : [], ratings : []},
       editModal : false,
       tech : {title : '', description: ''},
       midiaModal : false,
@@ -168,7 +168,7 @@ class BodyProfile extends React.Component {
           <button type="button" className="icon" onClick={() => this.handleToggleView()} style={{marginRight : 15}}>
             <FiMonitor className="spanButton" size="24px" color= "#04D361" ></FiMonitor>
           </button>
-          0.0
+          {this.state.project.likesMedia}
           <FiStar className="spanButton" size="24px" style={{marginLeft : 5}}></FiStar>
           <FiStar className="spanButton" size="24px"></FiStar>
           <FiStar className="spanButton" size="24px"></FiStar>
@@ -425,15 +425,18 @@ class BodyProfile extends React.Component {
         <h2>Comentários</h2>
         
         <span>
-          1
+          {this.state.project.comments}
           <FiMessageSquare className="spanButton" size="24px"  style={{marginLeft : 5}} ></FiMessageSquare>
         </span>
        </div>
         <ul >
-         <li>
-          <strong>Rafael Mesquita Brito (rafaelempresarialacc@gmail.com)</strong>
-          <p>Ótimo projeto, estou utilizando ele para mostrar minhas criações para o mundo através de um link apenas!</p>
-         </li>
+        {this.state.project.ratings.map( rating => (
+            <li key={rating.id}>
+              <strong>{`${rating.user_name} (${rating.user_email})`}</strong>
+              <p>{rating.comment}</p>
+              <br></br>
+            </li>
+          ))}
         </ul>
       </div>
 

@@ -69,8 +69,8 @@ export default function Profile() {
                   <td>{project.id}</td>
                   <td>{project.name}</td>
                   <td>{String(project.submmit_date)}</td>
-                  <td>4.75</td>
-                  <td>0</td>
+                  <td>{`${project.likesMedia} (${project.ratings}  Avaliações)`}</td>
+                  <td>{project.comments}</td>
                 </tr>
               ))
             }

@@ -25,7 +25,33 @@ module.exports = {
       projects[i].midia = await connection('uploads')
         .where('project_id', projects[i].id)
         .select('*')
-    }
+        
+      projects[i].ratings = await connection('rating')
+        .where('project_id', projects[i].id)
+        .select(['*'])
+
+      countRating = await connection('rating').where('project_id', projects[i].id).count('comment').count('id')
+      var string = JSON.stringify(countRating[0]).split(':')
+      var comments = string[1].split(',')
+      var ratings = string[2].split('}')
+
+      projects[i].comments = comments[0]
+      projects[i].ratings = ratings[0]
+      
+
+      var likes = await connection('rating')
+        .where('project_id', projects[i].id)
+        .select(['rating.stars']);
+
+      var likesMedia = 0.0
+      for (k in likes){
+        likesMedia += likes[k].stars
+      }
+      likesMedia = likesMedia / ratings[0]
+      likesMedia = parseFloat(likesMedia.toFixed(2))
+      console.log(likesMedia)
+      projects[i].likesMedia = likesMedia
+      }
     
 
 
@@ -55,6 +81,28 @@ module.exports = {
       .where('project_id', project.id)
       .select('*')
 
-      return response.json(project)
+    project.ratings = await connection('rating')
+      .where('project_id', project.id)
+      .select(['*'])
+
+    countRating = await connection('rating').where('project_id', project.id).count('comment').count('id')
+    var string = JSON.stringify(countRating[0]).split(':')
+    var comments = string[1].split(',')
+    var ratings = string[2].split('}')
+
+    var likes = await connection('rating')
+      .where('project_id', project.id)
+      .select(['rating.stars']);
+    var likesMedia = 0.0
+    for (i in likes){
+      likesMedia += likes[i].stars
+    }
+    likesMedia = likesMedia / ratings[0]
+    likesMedia = parseFloat(likesMedia.toFixed(2))
+    project.likesMedia = likesMedia
+
+    project.comments = comments[0]
+    project.ratingsCount = ratings[0]
+    return response.json(project)
   }
 }

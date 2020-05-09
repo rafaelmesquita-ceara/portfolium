@@ -42,6 +42,7 @@ module.exports = {
       projects[i].midia = await connection('uploads')
         .where('project_id', projects[i].id)
         .select('*')
+
     }
     
 

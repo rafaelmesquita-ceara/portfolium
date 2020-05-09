@@ -7,6 +7,7 @@ const SessionController = require('./controllers/SessionController');
 const UserController = require('./controllers/UserController');
 const ProjectController = require('./controllers/ProjectController');
 const UploadController = require('./controllers/UploadController');
+const RatingController = require('./controllers/RatingController');
 
 const routes = express.Router();
 const TechController = require('./controllers/TechController');
@@ -43,6 +44,11 @@ routes.put('/tech/:id', verifyJWT, (req, res) => TechController.complete(req, re
 routes.post('/postImageVideo', verifyJWT, multer(multerConfig).single("file"), UploadController.create)
 routes.get('/postImageVideo', UploadController.list)
 routes.delete('/postImageVideo/:id', verifyJWT, UploadController.delete)
+
+// Ratings
+routes.post('/rating', RatingController.create)
+routes.get('/rating', RatingController.index)
+routes.delete('/rating/:id', RatingController.delete)
 
 
 module.exports = routes;
