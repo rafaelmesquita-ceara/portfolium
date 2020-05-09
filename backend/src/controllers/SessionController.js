@@ -1,4 +1,6 @@
 const connection = require('../database/connection');
+require('dotenv/config');
+var jwt = require('jsonwebtoken');
 
 module.exports = {
   async create(request, response) {
@@ -18,6 +20,10 @@ module.exports = {
         .json({ error: 'NO USER FOUND.' });
       }
 
-      return response.json(user);
+      var token = jwt.sign({ id : user.id }, process.env.SECRET, {
+        expiresIn: 7200000 // expires in 2h
+      });
+
+      return response.status(200).send({ user_id : user.id, nome : user.nome, auth: true, token: token });
   }
 }

@@ -13,7 +13,6 @@ export default function NewProject() {
   const[description, setDescription] = useState('');
   const[what_learned, setWhatlearned] = useState('');
   const[git_url, setGitUrl] = useState('');
-  const userID = localStorage.getItem('userID');
   async function handleNewProject(e){
     e.preventDefault();
     
@@ -25,11 +24,7 @@ export default function NewProject() {
     };
 
     try{
-      await api.post('projects', data, {
-        headers: {
-          Authorization : userID
-        }
-      })
+      await api.post('projects', data)
       history.push('/profile');
     }catch(err){
       alert('Erro ao cadastrar projeto');

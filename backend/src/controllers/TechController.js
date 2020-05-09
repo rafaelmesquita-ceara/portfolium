@@ -8,8 +8,8 @@ module.exports = {
    */
   async create(request, response) {
     const {title, description} = request.body;
-    const project_id = request.headers.authorization;
-    const user_id = request.headers.authorization2;
+    const project_id = request.headers.project_id;
+    const user_id = request.user_id;
     const [id] = await connection('technologies').insert({
       title,
       description,
@@ -42,7 +42,7 @@ module.exports = {
    */
   async delete(request, response) {
     const { id } = request.params;
-    const user_id = request.headers.authorization;
+    const user_id = request.user_id;
 
     const technologie = await connection('technologies')
       .where('id', id)

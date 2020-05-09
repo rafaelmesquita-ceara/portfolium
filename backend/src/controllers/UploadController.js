@@ -12,8 +12,8 @@ module.exports = {
     const description = req.body.description;
 
     console.log(req.body.description);
-    const user_id = req.headers.authorization;
-    const project_id = req.headers.authorization2;
+    const user_id = req.user_id;
+    const project_id = req.headers.project_id;
 
     await connection('uploads').insert({
       filename,
@@ -38,7 +38,7 @@ module.exports = {
 
   async delete(req, res){
     const { id } = req.params;
-    const user_id = req.headers.authorization;
+    const user_id = req.user_id;
 
     const upload = await connection('uploads')
       .where('id', id)

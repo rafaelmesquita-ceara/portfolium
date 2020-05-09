@@ -6,7 +6,7 @@ module.exports = {
    */
   async create(request, response) {
     const {name, description, what_learned, git_url} = request.body;
-    const user_id = request.headers.authorization;
+    const user_id = request.user_id;
     const [id] = await connection('projects').insert({
       name,
       description,
@@ -57,7 +57,7 @@ module.exports = {
   
   async update (request, response){
     const {name, description, what_learned, git_url} = request.body;
-    const user_id = request.headers.authorization;
+    const user_id = request.user_id;
     const { id } = request.params;
 
 
@@ -80,7 +80,7 @@ module.exports = {
    */
   async delete(request, response) {
     const { id } = request.params;
-    const user_id = request.headers.authorization;
+    const user_id = request.user_id;
 
     const project = await connection('projects')
       .where('id', id)
@@ -94,5 +94,36 @@ module.exports = {
       await connection('projects').where('id', id).delete();
 
     return response.status(204).send();
+  },
+
+  /** 
+  * Toggle public private
+  */
+  async togglePublic(request, response) {
+    const user_id = request.user_id;
+    const  {id}  = request.params;
+
+    project = await connection('projects')
+      .where('user_id', '=', user_id)
+      .where('id', '=', id)
+      .select(['public'])
+      .first()
+    
+    if(project.public === 0){
+      await connection('projects')
+      .where('user_id', '=', user_id)
+      .where('id', '=', id)
+      .update({
+        public : 1
+      });
+    }else{
+      await connection('projects')
+      .where('user_id', '=', user_id)
+      .where('id', '=', id)
+      .update({
+        public : 0
+      });
+    }
+    return response.json({message : 'Sucess'});
   }
 }

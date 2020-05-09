@@ -1,0 +1,71 @@
+.logon-container{
+  width: 100%;
+  max-width: 1120px;
+  height: 100vh;
+  margin: 0 auto;
+
+  display : flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logon-container section.form{
+  width: 100%;
+  max-width: 350px;
+  margin: 30px;
+}
+
+
+.logon-container section.form form h1{
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.logoIMG {
+  max-width:355px;
+  max-height:300px;
+  width: auto;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+@-webkit-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; } 
+  }
+  @-moz-keyframes fadeIn {
+  0% { opacity: 0;}
+  100% { opacity: 1; }
+  }
+  @-o-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+  }
+  @keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+  }
+
+  .fadeIn {
+    -webkit-animation: fadeIn 3s ease-in-out;
+    -moz-animation: fadeIn 3s ease-in-out;
+    -o-animation: fadeIn 3s ease-in-out;
+    animation: fadeIn 3s ease-in-out;
+    }
+
+
+    @media only screen and (max-width: 1024px) {
+      .pcIMG {
+        display: none;
+      }
+      .logon-container{
+        width: 100%;
+        max-width: 1120px;
+        height: 90vh;
+        margin: 0 auto;
+      
+        display : flex;
+        align-items: center;
+        justify-content: center;
+      }
+  }

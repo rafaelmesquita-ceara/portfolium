@@ -2,7 +2,7 @@ const connection = require('../database/connection');
 
 module.exports = {
   async index(request, response) {
-    const user_id = request.headers.authorization;
+    const user_id = request.user_id;
 
     
     const [count] = await connection('projects').count();
@@ -32,5 +32,29 @@ module.exports = {
     response.header('X-Total-Count', count['count(*)']);
   
     return response.json(projects);
+  },
+
+  async indexOne(request, response){
+    const user_id = request.user_id;
+    const  {id}  = request.params;
+    console.log(id);
+
+    var project = await connection('projects')
+      .where({ 'projects.id': id })
+      .where('user_id', user_id)
+      .join('users', 'users.id', '=', 'projects.user_id')
+      .first()
+      .select(['projects.*'])
+      
+    
+    project.technologies = await connection('technologies')
+      .where('project_id', project.id)
+      .select('*');
+
+    project.midia = await connection('uploads')
+      .where('project_id', project.id)
+      .select('*')
+
+      return response.json(project)
   }
 }
